@@ -13,7 +13,7 @@ interface CalculateExercisesParams {
   dailyExerciseHours: Array<number>;
 }
 
-const calculateExercises = (dailyExerciseHours: Array<number>, target: number): Result => {
+export const calculateExercises = (dailyExerciseHours: Array<number>, target: number): Result => {
   const periodLength = dailyExerciseHours.length;
   const trainingDays = dailyExerciseHours
       .reduce((total, curr) => curr === 0 ? total : total + 1, 0);
