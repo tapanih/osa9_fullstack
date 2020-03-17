@@ -4,7 +4,7 @@ const app = express();
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!');
-})
+});
 
 app.get('/bmi', (req, res) => {
   const { height, weight } = req.query;
@@ -13,7 +13,7 @@ app.get('/bmi', (req, res) => {
   } else {
     res.status(400).send({ error: 'invalid parameters' });
   }
-})
+});
 
 const PORT = 3003;
 

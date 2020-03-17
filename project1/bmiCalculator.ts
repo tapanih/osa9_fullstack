@@ -1,9 +1,9 @@
 interface CalculateBmiParams {
-  height: number,
-  weight: number
+  height: number;
+  weight: number;
 }
 
-export const calculateBmi = (height: number, weight: number) : string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const heightInMeters = 0.01 * height;
   const BMI = weight / (heightInMeters * heightInMeters);
 
@@ -24,9 +24,9 @@ export const calculateBmi = (height: number, weight: number) : string => {
   } else {
     return "Obese Class III (Very severely obese)";
   }
-}
+};
 
-const parseCalculateBmiArguments = (args: Array<string>) : CalculateBmiParams => {
+const parseCalculateBmiArguments = (args: Array<string>): CalculateBmiParams => {
   if (args.length < 4) throw new Error('not enough arguments');
   if (args.length > 4) throw new Error('too many arguments');
 
@@ -34,11 +34,11 @@ const parseCalculateBmiArguments = (args: Array<string>) : CalculateBmiParams =>
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('provided values were not numbers');
   }
-}
+};
 
 try {
   const { height, weight } = parseCalculateBmiArguments(process.argv);

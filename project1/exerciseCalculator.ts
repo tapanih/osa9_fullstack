@@ -1,19 +1,19 @@
 interface Result {
-  periodLength: number,
-  trainingDays: number,
-  success: boolean,
-  rating: number,
-  ratingDescription: string,
-  target: number,
-  average: number
+  periodLength: number;
+  trainingDays: number;
+  success: boolean;
+  rating: number;
+  ratingDescription: string;
+  target: number;
+  average: number;
 }
 
 interface CalculateExercisesParams {
-  target: number,
-  dailyExerciseHours: Array<number>
+  target: number;
+  dailyExerciseHours: Array<number>;
 }
 
-const calculateExercises = (dailyExerciseHours: Array<number>, target: number) : Result => {
+const calculateExercises = (dailyExerciseHours: Array<number>, target: number): Result => {
   const periodLength = dailyExerciseHours.length;
   const trainingDays = dailyExerciseHours
       .reduce((total, curr) => curr === 0 ? total : total + 1, 0);
@@ -28,9 +28,9 @@ const calculateExercises = (dailyExerciseHours: Array<number>, target: number) :
   return {
     periodLength, trainingDays, success, rating, ratingDescription, target, average
   };
-}
+};
 
-const parseCalculateExercisesArguments = (args: Array<string>) : CalculateExercisesParams => {
+const parseCalculateExercisesArguments = (args: Array<string>): CalculateExercisesParams => {
   if (args.length < 4) throw new Error('not enough arguments');
 
   if (args.every((element, index) => index < 2 || !isNaN(Number(element)))) {
@@ -40,9 +40,9 @@ const parseCalculateExercisesArguments = (args: Array<string>) : CalculateExerci
 
     return { target, dailyExerciseHours };
   } else {
-    throw new Error('provided values were not numbers')
+    throw new Error('provided values were not numbers');
   }
-}
+};
 
 try {
   const { target, dailyExerciseHours } = parseCalculateExercisesArguments(process.argv);
