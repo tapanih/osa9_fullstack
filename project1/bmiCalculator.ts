@@ -3,26 +3,26 @@ interface CalculateBmiParams {
   weight: number
 }
 
-const calculateBmi = (height: number, weight: number) : string => {
+export const calculateBmi = (height: number, weight: number) : string => {
   const heightInMeters = 0.01 * height;
   const BMI = weight / (heightInMeters * heightInMeters);
 
   if (BMI < 15) {
-      return "Very severely underweight";
+    return "Very severely underweight";
   } else if (BMI < 16) {
-      return "Severely underweight";
+    return "Severely underweight";
   } else if (BMI < 18.5) {
-      return "Underweight";
+    return "Underweight";
   } else if (BMI < 25) {
-      return "Normal (healthy weight)";
+    return "Normal (healthy weight)";
   } else if (BMI < 30) {
-      return "Overweight";
+    return "Overweight";
   } else if (BMI < 35) {
-      return "Obese Class I (Moderately obese)";
+    return "Obese Class I (Moderately obese)";
   } else if (BMI < 40) {
-      return "Obese Class II (Severely obese)";
+    return "Obese Class II (Severely obese)";
   } else {
-      return "Obese Class III (Very severely obese)";
+    return "Obese Class III (Very severely obese)";
   }
 }
 
