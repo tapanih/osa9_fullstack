@@ -1,8 +1,13 @@
 import { v4 as uuid } from 'uuid';
 import patientData from '../../data/patients.json';
-import { Patient, PatientWithoutSensitiveInfo } from '../types';
+import { NewPatient, Patient, PatientWithoutSensitiveInfo } from '../types';
+import toNewPatient from '../utils';
 
-const patients: Array<Patient> = patientData;
+const patients: Array<Patient> = patientData.map(obj => {
+  const object = toNewPatient(obj) as Patient;
+  object.id = obj.id;
+  return object;
+});
 
 const getPatientsWithoutSensitiveInfo = (): PatientWithoutSensitiveInfo[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -14,17 +19,11 @@ const getPatientsWithoutSensitiveInfo = (): PatientWithoutSensitiveInfo[] => {
   }));
 };
 
-const addPatient = (
-  name: string, ssn: string, dateOfBirth: string, occupation: string, gender: string
-  ): Patient => {
+const addPatient = ( patient: NewPatient ): Patient => {
 
   const newPatient = {
     id: uuid(),
-    name,
-    ssn,
-    dateOfBirth,
-    occupation,
-    gender,
+    ...patient
   };
 
   patients.push(newPatient);
