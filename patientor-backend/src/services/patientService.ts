@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import patientData from '../../data/patients.json';
 import { Patient, PatientWithoutSensitiveInfo } from '../types';
 
@@ -13,8 +14,21 @@ const getPatientsWithoutSensitiveInfo = (): PatientWithoutSensitiveInfo[] => {
   }));
 };
 
-const addPatient = () => {
-  return null;
+const addPatient = (
+  name: string, ssn: string, dateOfBirth: string, occupation: string, gender: string
+  ): Patient => {
+
+  const newPatient = {
+    id: uuid(),
+    name,
+    ssn,
+    dateOfBirth,
+    occupation,
+    gender,
+  };
+
+  patients.push(newPatient);
+  return newPatient;
 };
 
 export default {
