@@ -7,7 +7,7 @@ import { useStateValue, updatePatient } from "../state";
 import { Header, Icon } from "semantic-ui-react";
 
 const PatientInfo: React.FC = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
   const patient = patients[id];
 
@@ -19,7 +19,7 @@ const PatientInfo: React.FC = () => {
         );
         dispatch(updatePatient(patientFromApi));
       } catch (e) {
-        console.error(e.response.data);
+        console.error("Patient not found");
       }
     };
     if (!patient || !patient.ssn) {
@@ -48,18 +48,21 @@ const PatientInfo: React.FC = () => {
       <div>SSN: {patient.ssn}</div>
       <div>Occupation: {patient.occupation}</div>
       <h3>entries</h3>
-      {!patient.entries ? null :
-        Object.values(patient.entries).map((entry: Entry) => (
+      {(!patient.entries || !patient.entries.length)
+        ? <div>No entries yet</div>
+        : Object.values(patient.entries).map((entry: Entry) => (
           <div key={entry.id}>
             <div>{entry.date} <i>{entry.description}</i></div>
             <ul>
             {!entry.diagnosisCodes ? null :
               Object.values(entry.diagnosisCodes).map((code: string) => (
-                <li key={code}>{code}</li>
+                <li key={code}>
+                  {code} {diagnoses[code] ? diagnoses[code].name : null}
+                </li>
               ))}
             </ul>
-          </div>
-        ))}
+          </div>)
+      )}
 
     </div>
   );
