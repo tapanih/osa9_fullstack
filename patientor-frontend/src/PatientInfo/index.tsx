@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
-import { Patient, Gender } from "../types";
+import { Patient, Gender, Entry } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue, updatePatient } from "../state";
 import { Header, Icon } from "semantic-ui-react";
@@ -45,9 +45,22 @@ const PatientInfo: React.FC = () => {
   return (
     <div className="App">
       <Header as="h1">{patient.name} <Icon name={getIconName(patient.gender)}/></Header>
-      <p>SSN: {patient.ssn}</p>
-      <p>Occupation: {patient.occupation}</p>
-      <p>Date of Birth: {patient.dateOfBirth}</p>
+      <div>SSN: {patient.ssn}</div>
+      <div>Occupation: {patient.occupation}</div>
+      <h3>entries</h3>
+      {!patient.entries ? null :
+        Object.values(patient.entries).map((entry: Entry) => (
+          <div key={entry.id}>
+            <div>{entry.date} <i>{entry.description}</i></div>
+            <ul>
+            {!entry.diagnosisCodes ? null :
+              Object.values(entry.diagnosisCodes).map((code: string) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
     </div>
   );
 };
