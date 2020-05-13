@@ -82,6 +82,9 @@ const parseEntry = (object: any): Entry => {
 };
 
 const parseEntries = (array: any[]): Entry[] => {
+  if (!array) {
+    return [];
+  }
   return Object.values(array).map((obj: any) => parseEntry(obj));
 };
 
