@@ -1,4 +1,4 @@
-import { Gender, NewPatient } from './types';
+import { Gender, NewPatient, Entry } from './types';
 
 const SSN_REGEX = /^(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])([5-9]\d\+|\d\d-|[012]\dA)\d{3}[\dA-Z]$/;
 
@@ -60,7 +60,30 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
+enum Type {
+  "HealthCheck", "Hospital", "OccupationalHealthcare"
+}
+
+const parseType = (type: any): string => {
+  if (!type || !isString(type) || !Object.values(Type).includes(type)) {
+    throw new Error('Incorrect or missing type: ' + type);
+  }
+  return type;
+};
+
 // OBJECT VALIDATORS
+
+const parseEntry = (object: any): Entry => {
+  const type = parseType(object.type);
+  return {
+    type,
+    ...object
+  };
+};
+
+const parseEntries = (array: any[]): Entry[] => {
+  return Object.values(array).map((obj: any) => parseEntry(obj));
+};
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const toNewPatient = (object: any): NewPatient => {
@@ -70,7 +93,7 @@ const toNewPatient = (object: any): NewPatient => {
     dateOfBirth: parseDateOfBirth(object.dateOfBirth),
     occupation: parseOccupation(object.occupation),
     gender: parseGender(object.gender),
-    entries: []
+    entries: parseEntries(object.entries)
   };
 };
 
