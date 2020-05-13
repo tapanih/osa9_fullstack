@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import { Patient, Gender } from "../types";
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { useStateValue, updatePatient } from "../state";
 import { Header, Icon } from "semantic-ui-react";
 
 const PatientInfo: React.FC = () => {
@@ -17,7 +17,7 @@ const PatientInfo: React.FC = () => {
         const { data: patientFromApi } = await axios.get<Patient>(
             `${apiBaseUrl}/patients/${id}`
         );
-        dispatch({ type: "UPDATE_PATIENT", payload: patientFromApi });
+        dispatch(updatePatient(patientFromApi));
       } catch (e) {
         console.error(e.response.data);
       }
@@ -36,7 +36,7 @@ const PatientInfo: React.FC = () => {
       default:
         return "genderless";
     }
-  } 
+  };
 
   if (!patient) {
     return null;
