@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
-import { Patient, Gender, Entry } from "../types";
+import { Patient, Gender, Entry, NewEntry } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue, updatePatient, addEntry } from "../state";
 import { Header, Icon, Button } from "semantic-ui-react";
@@ -23,11 +23,37 @@ const PatientInfo: React.FC = () => {
     setError(undefined);
   };
 
+  const toNewEntry = (values: EntryFormValues): NewEntry =>  {
+    const baseEntry = {
+      description: values.description,
+      date: values.date,
+      specialist: values.specialist
+    };
+    switch (values.type) {
+      case "Hospital":
+        return {
+          type: values.type,
+          diagnosisCodes: values.diagnosisCodes,
+          discharge: values.discharge,
+          ...baseEntry
+        };
+      case "HealthCheck":
+        return {
+          type: values.type,
+          healthCheckRating: values.healthCheckRating,
+          ...baseEntry
+        };
+      default:
+        throw new Error("Unhandled case: " + values);
+    }
+  };
+
   const submitNewEntry = async (values: EntryFormValues) => {
+    const entry = toNewEntry(values);
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id}/entries`,
-        values
+        entry
       );
       dispatch(addEntry(id, newEntry));
       closeModal();

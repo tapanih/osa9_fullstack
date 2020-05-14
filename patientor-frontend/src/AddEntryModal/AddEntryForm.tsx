@@ -1,16 +1,31 @@
 import React from 'react';
-import { HospitalEntry } from '../types';
+import { Diagnosis, Discharge, HealthCheckRating } from '../types';
 import { Formik, Field, Form } from 'formik';
-import { TextField, DiagnosisSelection } from '../AddPatientModal/FormField';
+import { TextField, DiagnosisSelection, NumberField } from '../AddPatientModal/FormField';
 import { useStateValue } from '../state';
 import { Grid, Button } from 'semantic-ui-react';
+import { SelectTypeField, TypeOption } from './FormField';
 
-export type EntryFormValues = Omit<HospitalEntry, "id">;
+export interface EntryFormValues {
+  type: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnosis['code']>;
+  discharge: Discharge;
+  healthCheckRating: HealthCheckRating;
+}
 
 interface Props {
   onSubmit: (values: EntryFormValues) => void;
   onCancel: () => void;
 }
+
+const typeOptions: TypeOption[] = [
+  { value: "Hospital", label: "Hospital visit" },
+  { value: "OccupationalHealthcare", label: "Occupational healthcare"},
+  { value: "HealthCheck", label: "Health check"}
+];
 
 const DATE_REGEX = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
 
@@ -43,13 +58,19 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         discharge: {
           date: "",
           criteria: ""
-        }
+        },
+        healthCheckRating: 3
       }}
       onSubmit={onSubmit}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched, values }) => {
         return (
           <Form className="form ui">
+            <SelectTypeField
+              label="Type"
+              name="type"
+              options={typeOptions}
+            />
             <Field
               label="Description"
               placeholder="Description"
@@ -71,25 +92,40 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               component={TextField}
               validate={validate}
             />
-            <DiagnosisSelection
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-              diagnoses={Object.values(diagnoses)}
-            />
-            <Field 
-              label="Discharge date"
-              placeholder="YYYY-MM-DD"
-              name="discharge.date"
-              component={TextField}
-              validate={validateDate}
-            />
-            <Field
-              label="Discharge criteria"
-              placeholder="Criteria"
-              name="discharge.criteria"
-              component={TextField}
-              validate={validate}
-            />
+            {values.type !== "HealthCheck" && (
+              <DiagnosisSelection
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                diagnoses={Object.values(diagnoses)}
+              />
+            )}
+            {values.type === "HealthCheck" && (
+              <Field
+                label="healthCheckRating"
+                name="healthCheckRating"
+                component={NumberField}
+                min={0}
+                max={3}
+              />
+            )}
+            {values.type === "Hospital" && (
+            <>
+              <Field 
+                label="Discharge date"
+                placeholder="YYYY-MM-DD"
+                name="discharge.date"
+                component={TextField}
+                validate={validateDate}
+              />
+              <Field
+                label="Discharge criteria"
+                placeholder="Criteria"
+                name="discharge.criteria"
+                component={TextField}
+                validate={validate}
+              />
+            </>
+            )}
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">

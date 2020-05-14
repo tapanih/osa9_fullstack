@@ -65,3 +65,5 @@ export interface Patient {
   dateOfBirth?: string;
   entries?: Entry[];
 }
+
+export type NewEntry = Omit<HealthCheckEntry, "id"> | Omit<HospitalEntry, "id">;
