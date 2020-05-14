@@ -12,8 +12,26 @@ interface Props {
   onCancel: () => void;
 }
 
+const DATE_REGEX = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+
 export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnoses }] = useStateValue();
+
+  const validate = (value: string): string | undefined => {
+    if (!value) {
+      return "Field is required";
+    }
+  };
+
+  const validateDate = (value: string): string | undefined => {
+    if (!value) {
+      return "Field is required";
+    }
+    if (!DATE_REGEX.test(value)) {
+      return "Incorrect format";
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -28,20 +46,6 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         }
       }}
       onSubmit={onSubmit}
-      validate={values => {
-        const requiredError = "Field is required";
-        const errors: { [field: string]: string } = {};
-        if (!values.description) {
-          errors.description = requiredError;
-        }
-        if (!values.date) {
-          errors.date = requiredError;
-        }
-        if (!values.specialist) {
-          errors.specialist = requiredError;
-        }
-        return errors;
-      }}
     >
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
@@ -51,18 +55,21 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               placeholder="Description"
               name="description"
               component={TextField}
+              validate={validate}
             />
             <Field
               label="Date"
               placeholder="YYYY-MM-DD"
               name="date"
               component={TextField}
+              validate={validateDate}
             />
             <Field
               label="Specialist"
               placeholder="Specialist"
               name="specialist"
               component={TextField}
+              validate={validate}
             />
             <DiagnosisSelection
               setFieldValue={setFieldValue}
@@ -74,12 +81,14 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               placeholder="YYYY-MM-DD"
               name="discharge.date"
               component={TextField}
+              validate={validateDate}
             />
             <Field
               label="Discharge criteria"
               placeholder="Criteria"
               name="discharge.criteria"
               component={TextField}
+              validate={validate}
             />
             <Grid>
               <Grid.Column floated="left" width={5}>
