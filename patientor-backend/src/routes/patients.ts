@@ -33,8 +33,8 @@ router.post('/:id/entries', (req, res) => {
     res.status(400).send("Patient does not exist.");
   } else {
     const newEntry = toNewEntry(req.body);
-    patientService.addNewEntry(patient, newEntry);
-    res.send(patient);
+    const entry = patientService.addNewEntry(patient, newEntry);
+    res.send(entry);
   }
 });
 
