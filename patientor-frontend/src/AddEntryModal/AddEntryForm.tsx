@@ -1,10 +1,10 @@
 import React from 'react';
-import { Diagnosis, Discharge, HealthCheckRating } from '../types';
+import { Diagnosis, Discharge, HealthCheckRating, SickLeave } from '../types';
 import { Formik, Field, Form } from 'formik';
-import { TextField, DiagnosisSelection, NumberField } from '../AddPatientModal/FormField';
+import { TextField } from '../AddPatientModal/FormField';
 import { useStateValue } from '../state';
 import { Grid, Button } from 'semantic-ui-react';
-import { SelectTypeField, TypeOption } from './FormField';
+import { SelectTypeField, TypeOption, DiagnosisSelection, NumberField } from './FormField';
 
 export interface EntryFormValues {
   type: string;
@@ -14,6 +14,8 @@ export interface EntryFormValues {
   diagnosisCodes?: Array<Diagnosis['code']>;
   discharge: Discharge;
   healthCheckRating: HealthCheckRating;
+  employerName: string;
+  sickLeave: SickLeave;
 }
 
 interface Props {
@@ -59,7 +61,12 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
           date: "",
           criteria: ""
         },
-        healthCheckRating: 3
+        healthCheckRating: 3,
+        employerName: "",
+        sickLeave: {
+          startDate: "",
+          endDate: ""
+        }
       }}
       onSubmit={onSubmit}
     >
@@ -123,6 +130,32 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 name="discharge.criteria"
                 component={TextField}
                 validate={validate}
+              />
+            </>
+            )}
+            {values.type === "OccupationalHealthcare" && (
+            <>
+              <Field
+                label="Employer name"
+                placeholder="Employer name"
+                name="employerName"
+                component={TextField}
+                validate={validate}
+              />
+              <h3>Sick leave</h3>
+              <Field
+                label="Start date"
+                placeholder="YYYY-MM-DD"
+                name="sickLeave.startDate"
+                component={TextField}
+                validate={validateDate}
+              />
+              <Field
+                label="End date"
+                placeholder="YYYY-MM-DD"
+                name="sickLeave.endDate"
+                component={TextField}
+                validate={validateDate}
               />
             </>
             )}

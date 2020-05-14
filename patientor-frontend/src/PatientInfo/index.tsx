@@ -37,6 +37,13 @@ const PatientInfo: React.FC = () => {
           discharge: values.discharge,
           ...baseEntry
         };
+      case "OccupationalHealthcare":
+        return {
+          type: values.type,
+          employerName: values.employerName,
+          sickLeave: values.sickLeave,
+          ...baseEntry
+        };
       case "HealthCheck":
         return {
           type: values.type,

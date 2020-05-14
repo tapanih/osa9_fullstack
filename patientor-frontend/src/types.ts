@@ -66,4 +66,7 @@ export interface Patient {
   entries?: Entry[];
 }
 
-export type NewEntry = Omit<HealthCheckEntry, "id"> | Omit<HospitalEntry, "id">;
+export type NewEntry = 
+  | Omit<HealthCheckEntry, "id"> 
+  | Omit<HospitalEntry, "id">
+  | Omit<OccupationalHealthcareEntry, "id">;
